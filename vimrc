@@ -54,6 +54,8 @@ set virtualedit+=block
 set whichwrap+=<,>,h,l,[,]
 
 colorscheme molokai
+highlight Normal ctermbg=NONE guibg=NONE
+
 autocmd vimenter * NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 autocmd FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
@@ -117,5 +119,4 @@ let g:vimwiki_list = [{
   \ 'template_default': 'default',
   \ 'template_ext': '.html',
   \ 'custom_wiki2html': '$HOME/vimwiki/wiki2html.sh',
-  \ 'custom_wiki2html_args': ''}]
-
+\ 'custom_wiki2html_args': ''}]
