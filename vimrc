@@ -1,5 +1,4 @@
 set nocompatible
-set term=screen-256color
 filetype off
 
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -8,7 +7,7 @@ call vundle#rc()
 Bundle 'gmarik/Vundle.vim'
 Bundle 'flazz/vim-colorschemes'
 Bundle 'indenthtml.vim'
-Bundle 'scrooloose/nerdtree'
+"Bundle 'scrooloose/nerdtree'
 Plugin 'elzr/vim-json'
 Plugin 'rust-lang/rust.vim'
 Plugin 'vim-syntastic/syntastic.git'
@@ -56,8 +55,8 @@ set whichwrap+=<,>,h,l,[,]
 colorscheme molokai
 highlight Normal ctermbg=NONE guibg=NONE
 
-autocmd vimenter * NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+"autocmd vimenter * NERDTree
+"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 autocmd FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 autocmd VimEnter * wincmd p
  
@@ -104,7 +103,7 @@ let g:airline_symbols.paste = '∥'
 let g:airline_symbols.whitespace = 'Ξ'
 
 let mapleader=" "
-map <Leader>n <plug>NERDTreeTabsToggle<CR>
+"map <Leader>n <plug>NERDTreeTabsToggle<CR>
 
 map <Leader>a gg=G<CR>
 map <Leader><Left> :tabprevious<CR>
@@ -119,4 +118,4 @@ let g:vimwiki_list = [{
   \ 'template_default': 'default',
   \ 'template_ext': '.html',
   \ 'custom_wiki2html': '$HOME/vimwiki/wiki2html.sh',
-\ 'custom_wiki2html_args': ''}]
+  \ 'custom_wiki2html_args': ''}]
