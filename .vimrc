@@ -16,12 +16,16 @@ Plugin 'mattn/webapi-vim'
 Plugin 'timonv/vim-cargo'
 Plugin 'stanangeloff/php.vim'
 Plugin 'jistr/vim-nerdtree-tabs.git'
-" Powerline fonts needed to get traingles 
+" Powerline fonts needed to get triangles
 " https://github.com/powerline/fonts
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'vimwiki/vimwiki'
+" Python
+Plugin 'vim-scripts/indentpython.vim'
+Plugin 'nvie/vim-flake8'
+
 
 filetype plugin indent on
 set number
@@ -30,11 +34,11 @@ syntax on
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
-set expandtab 
-set smarttab 
-set shiftround 
-set autoindent 
-set smartindent 
+set expandtab
+set smarttab
+set shiftround
+set autoindent
+set smartindent
 
 set nobackup
 set nowritebackup
@@ -59,7 +63,7 @@ highlight Normal ctermbg=NONE guibg=NONE
 "autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 autocmd FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 autocmd VimEnter * wincmd p
- 
+
 autocmd FileType vimwiki call SetMarkdownOptions()
 
 function! SetMarkdownOptions()
@@ -109,6 +113,9 @@ map <Leader>a gg=G<CR>
 map <Leader><Left> :tabprevious<CR>
 map <Leader><Right> :tabnext<CR>
 
+" Allow saving of files as sudo when I forgot to start vim using sudo.
+cmap w!! w !sudo tee > /dev/null %
+
 let g:vimwiki_list = [{
   \ 'path': '$HOME/vimwiki',
   \ 'syntax': 'markdown',
@@ -119,3 +126,15 @@ let g:vimwiki_list = [{
   \ 'template_ext': '.html',
   \ 'custom_wiki2html': '$HOME/vimwiki/wiki2html.sh',
   \ 'custom_wiki2html_args': ''}]
+
+"Python
+let python_highlight_all=1
+"au BufNewFile,BufRead *.py
+"    \ set tabstop=4
+"    \ set softtabstop=4
+"    \ set shiftwidth=4
+"    \ set textwidth=79
+"    \ set expandtab
+"    \ set autoindent
+"    \ set fileformat=unix
+"au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
