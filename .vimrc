@@ -10,13 +10,24 @@ Bundle 'indenthtml.vim'
 Bundle 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'elzr/vim-json'
+Plugin 'kien/ctrlp.vim'
+
+Plugin 'christoomey/vim-tmux-navigator'
 
 " Python
 Plugin 'vim-scripts/indentpython.vim'
 Plugin 'nvie/vim-flake8'
 
+" Code completion
+" Requires additional libraries:
+" https://github.com/Valloric/YouCompleteMe#installation
+Bundle 'Valloric/YouCompleteMe'
+
 Plugin 'vim-syntastic/syntastic.git'
 Plugin 'jiangmiao/auto-pairs.git'
+Plugin 'tmhedberg/SimpylFold'
+" Git integration
+Plugin 'tpope/vim-fugitive'
 
 " Php
 Plugin 'stanangeloff/php.vim'
@@ -43,6 +54,13 @@ set shiftround
 set autoindent 
 set smartindent 
 
+set splitbelow
+set splitright
+
+" Enable folding
+set foldmethod=indent
+set foldlevel=99
+
 set nobackup
 set nowritebackup
 set noswapfile
@@ -61,6 +79,15 @@ set whichwrap+=<,>,h,l,[,]
 
 colorscheme molokai
 highlight Normal ctermbg=NONE guibg=NONE
+highlight BadWhitespace ctermbg=124 guibg=#af0000 "rgb=175,0,0"
+
+if &term =~ '^screen'
+    " tmux will send xterm-style keys when its xterm-keys option is on
+    execute "set <xUp>=\e[1;*A"
+    execute "set <xDown>=\e[1;*B"
+    execute "set <xRight>=\e[1;*C"
+    execute "set <xLeft>=\e[1;*D"
+endif
 
 " Starts NERDTree automatically
 "autocmd vimenter * NERDTree
@@ -73,11 +100,11 @@ autocmd VimEnter * wincmd p
 autocmd FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 
 " Enable markdown in vimwiki
-autocmd FileType vimwiki call SetMarkdownOptions()
-function! SetMarkdownOptions()
-    call VimwikiSet('syntax', 'markdown')
-    call VimwikiSet('custom_wiki2html', '$HOME/vimwiki/wiki2html.sh')
-endfunction
+"autocmd FileType vimwiki call SetMarkdownOptions()
+"function! SetMarkdownOptions()
+"    call VimwikiSet('syntax', 'markdown')
+"    call VimwikiSet('custom_wiki2html', '$HOME/vimwiki/wiki2html.sh')
+"endfunction
 
 " Add SyntasticStatus to status line
 set statusline+=%#warningmsg#
@@ -90,8 +117,13 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_loc_list_height=5
 let g:airline#extensions#tabline#enabled = 1
+" Only show filename
+let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline_theme='luna'
 let g:airline_powerline_fonts = 1
+" Show docstring
+"let g:SimpylFold_docstring_preview=1
+let g:tmux_navigator_no_mappings = 1
 
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
@@ -110,26 +142,37 @@ let g:airline_symbols.paste = 'ρ'
 let g:airline_symbols.paste = 'Þ'
 let g:airline_symbols.paste = '∥'
 let g:airline_symbols.whitespace = 'Ξ'
+let g:ycm_autoclose_preview_window_after_completion=1
 
 let mapleader=" "
 map <Leader>n :NERDTreeToggle<CR>
-nnoremap <leader>q :bp<cr>:bd #<cr>
 
 " Format the whole file
 map <Leader>a gg=G<CR>
-" Switch tabs
-map <Leader><Left> :tabprevious<CR>
-map <Leader><Right> :tabnext<CR>
+
 " Switch buffers
-map <S-Tab> :bprevious<CR>
-map <Tab> :b-next<CR>
+nnoremap <S-Tab> :bprevious<CR>
+nnoremap <Tab> :bnext<CR>
+nnoremap <Leader>q :bp<BAR> bd #<CR>
+nnoremap <Leader>l :ls<CR>
+nnoremap <leader>T :enew<CR>
+nnoremap <silent> <C-Left> :TmuxNavigateLeft<CR>
+nnoremap <silent> <C-Down> :TmuxNavigateDown<CR>
+nnoremap <silent> <C-Up>   :TmuxNavigateUp<CR>
+nnoremap <silent> <C-Right> :TmuxNavigateRight<CR>
 
 " Use system clipboard
-noremap <Leader>y "+y
-noremap <Leader>p "+p
+noremap <Leader>y "+y<CR>
+noremap <Leader>p "+p<CR>
 " Copy-on-select (can be pasted with middle mouse button)
-noremap <Leader>Y "*y
-noremap <Leader>P "*p
+noremap <Leader>Y "*y<CR>
+noremap <Leader>P "*p<CR>
+
+" Enable folding with the spacebar
+nnoremap <Space> za<CR>
+
+" Go to definition
+map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 " Allow saving of files as sudo when I forgot to start vim using sudo.
 cmap w!! w !sudo tee > /dev/null %
@@ -147,12 +190,13 @@ let g:vimwiki_list = [{
 
 "Python
 let python_highlight_all=1
-"au BufNewFile,BufRead *.py
-"    \ set tabstop=4
-"    \ set softtabstop=4
-"    \ set shiftwidth=4
-"    \ set textwidth=79
-"    \ set expandtab
-"    \ set autoindent
-"    \ set fileformat=unix
-"au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+au BufNewFile,BufRead *.py
+    \ set tabstop=4 |
+    \ set softtabstop=4 |
+    \ set shiftwidth=4 |
+    \ set textwidth=79 |
+    \ set expandtab |
+    \ set autoindent |
+    \ set fileformat=unix |
+    \ set encoding=utf-8
+au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
